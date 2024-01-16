@@ -43,10 +43,7 @@ static int cntcnt = 0;		/* number of interrupt counters allocated */
 /*
  * Print a UNIBUS interrupt vector.
  */
-void dump_ubavec(fp, vector, number)
-	register FILE *fp;
-	char *vector;
-	int number;
+void dump_ubavec(register FILE *fp, char *vector, int number)
 {
 	char nbuf[80];
 	register char *v = nbuf;
@@ -98,8 +95,7 @@ static	struct stdintrs {
  * reference the associated counters into a separate
  * file which is prepended to locore.s.
  */
-void dump_std(fp, gp)
-	register FILE *fp, *gp;
+void dump_std(register FILE *fp, FILE *gp)
 {
 	register struct stdintrs *si = &stdintrs[machine-1];
 	register char **cpp;
@@ -132,10 +128,7 @@ void dump_std(fp, gp)
 	}
 }
 
-void dump_intname(fp, vector, number)
-	register FILE *fp;
-	char *vector;
-	int number;
+void dump_intname(register FILE *fp, char *vector, int number)
 {
 	register char *cp = vector;
 
@@ -158,8 +151,7 @@ void dump_intname(fp, vector, number)
 /*
  * Reserve space for the interrupt counters.
  */
-void dump_ctrs(fp)
-	register FILE *fp;
+void dump_ctrs(register FILE *fp)
 {
 	struct stdintrs *si = &stdintrs[machine-1];
 
@@ -178,7 +170,7 @@ void dump_ctrs(fp)
 /*
  * Create the UNIBUS interrupt vector glue file.
  */
-void ubglue()
+void ubglue(void)
 {
 	register FILE *fp, *gp;
 	register struct device *dp, *mp;
@@ -240,10 +232,7 @@ void ubglue()
 /*
  * Print a VERSAbus interrupt vector
  */
-void dump_vbavec(fp, vector, number)
-	register FILE *fp;
-	char *vector;
-	int number;
+void dump_vbavec(register FILE *fp, char *vector, int number)
 {
 	char nbuf[80];
 	register char *v = nbuf;
@@ -265,7 +254,7 @@ void dump_vbavec(fp, vector, number)
 /*
  * Create the VERSAbus interrupt vector glue file.
  */
-void vbglue()
+void vbglue(void)
 {
 	register FILE *fp, *gp;
 	register struct device *dp, *mp;
@@ -326,14 +315,13 @@ void vbglue()
  * HP9000/300 interrupts are auto-vectored.
  * Code is hardwired in locore.s
  */
-void hpglue() {}
+void hpglue(void) {}
 
 /*
  * Create the ISA interrupt vector glue file.
  */
-void vector() {
-	register FILE *fp, *gp;
-	register struct device *dp, *mp;
+void vector(register FILE *fp, FILE *gp, register struct device *dp, struct device*mp)
+{
 	int count;
 
 	fp = fopen(path("vector.s"), "w");

@@ -126,6 +126,8 @@ int finddev(dev_t dev);
 void deverror(char *systemname, char *devtype);
 int alreadychecked(dev_t dev, dev_t list[], dev_t *last);
 
+void yyerror(char *s);
+
 %}
 %%
 Configuration:
@@ -650,8 +652,7 @@ Pin_list:
               = { cur.d_pins[cur.d_npins++] = $1; };
 %%
 
-void yyerror(s)
-	char *s;
+void yyerror(char *s)
 {
 
 	fprintf(stderr, "config: line %d: %s\n", yyline + 1, s);

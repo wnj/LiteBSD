@@ -236,7 +236,7 @@ void news_ioconf(void);
 void ubglue(void);
 void vbglue(void);
 void hpglue(void);
-void vector(void);
+void vector(register FILE *fp, FILE *gp, register struct device *dp, struct device*mp);
 void makefile(void);
 void headers(void);
 void swapconf(void);

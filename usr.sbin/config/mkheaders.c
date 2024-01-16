@@ -38,11 +38,13 @@
 #include "config.h"
 #include "y.tab.h"
 
-void do_header(dev, hname, count)
-	char *dev, *hname;
-	int count;
+char *toheader(char *dev);
+char *tomacro(register char *dev);
+void do_count(register char *dev, char *hname, int search);
+
+void do_header(char *dev, char *hname, int count)
 {
-	char *file, *name, *inw, *toheader(), *tomacro();
+	char *file, *name, *inw;
 	struct file_list *fl, *fl_head, *tflp;
 	FILE *inf, *outf;
 	int inc, oldcount;
@@ -121,9 +123,7 @@ void do_header(dev, hname, count)
  * count all the devices of a certain type and recurse to count
  * whatever the device is connected to
  */
-void do_count(dev, hname, search)
-	register char *dev, *hname;
-	int search;
+void do_count(register char *dev, char *hname, int search)
 {
 	register struct device *dp, *mp;
 	register int count, hicount;
@@ -160,7 +160,7 @@ void do_count(dev, hname, search)
 	do_header(dev, hname, count > hicount ? count : hicount);
 }
 
-void headers()
+void headers(void)
 {
 	register struct file_list *fl;
 
@@ -173,8 +173,7 @@ void headers()
  * convert a dev name to a .h file name
  */
 char *
-toheader(dev)
-	char *dev;
+toheader(char *dev)
 {
 	static char hbuf[80];
 
@@ -186,8 +185,7 @@ toheader(dev)
 /*
  * convert a dev name to a macro name
  */
-char *tomacro(dev)
-	register char *dev;
+char *tomacro(register char *dev)
 {
 	static char mbuf[20];
 	register char *cp;

@@ -38,10 +38,11 @@
 #include <unistd.h>
 #include <ctype.h>
 
-void swapconf()
+struct file_list *do_swap(register struct file_list *fl);
+
+void swapconf(void)
 {
 	register struct file_list *fl;
-	struct file_list *do_swap();
 
 	fl = conf_list;
 	while (fl) {
@@ -54,8 +55,7 @@ void swapconf()
 }
 
 struct file_list *
-do_swap(fl)
-	register struct file_list *fl;
+do_swap(register struct file_list *fl)
 {
 	FILE *fp;
 	char  swapname[80];
@@ -112,7 +112,7 @@ static	struct devdescription {
 	struct	devdescription *dev_next;
 } *devtable;
 
-void initdevtable()
+void initdevtable(void)
 {
 	char buf[BUFSIZ];
 	int maj;
@@ -146,9 +146,7 @@ void initdevtable()
  * terms of major/minor instead of string names.
  */
 dev_t
-nametodev(name, defunit)
-	char *name;
-	int defunit;
+nametodev(char *name, int defunit)
 {
 	char *cp, partition;
 	int unit;
@@ -191,8 +189,7 @@ nametodev(name, defunit)
 }
 
 char *
-devtoname(dev)
-	dev_t dev;
+devtoname(dev_t dev)
 {
 	char buf[80];
 	register struct devdescription *dp;
