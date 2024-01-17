@@ -118,7 +118,7 @@ usage:		fputs("usage: config [-gp] sysname\n", stderr);
 
 	case MACHINE_I386:
 		i386_ioconf();		/* Print ioconf.c */
-		vector();		/* Create vector.s */
+		//vector();		/* Create vector.s */
 		break;
 
 	case MACHINE_MIPS:
