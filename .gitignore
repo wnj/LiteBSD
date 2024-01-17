@@ -7,3 +7,6 @@
 
 DESTDIR
 sdcard.img
+
+lex.yy.c
+y.tab.h
