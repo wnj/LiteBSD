@@ -23,6 +23,9 @@ all:    build fs
 clean:  cleandir
 	rm -rf sdcard.img ${DESTDIR}
 
+cleanall: clean
+	 ${MAKE} -Csys/compile cleandir
+
 #
 # Create the DESTDIR tree.
 # Install /etc and /usr/include files.
