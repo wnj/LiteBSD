@@ -1,0 +1,75 @@
+#
+# PIC32MZ target: PIC32MZ Proto Board
+#
+# To build the kernel, use:
+#   ../../../usr.sbin/config/config PROTO.pic32
+#   cd ../../compile/PROTO.pic32
+#   bmake depend
+#   bmake
+#
+machine         "pic32"
+cpu             "PIC32MZ"
+ident           "PROTO"
+
+# Linker script
+ldscript        "pic32/bare-mz.ld"
+
+# Need to set locally
+timezone        8 dst
+maxusers        2
+
+# Standard system options
+options         SWAPPAGER               # swap pager (anonymous and swap space)
+options         VNODEPAGER              # vnode pager (mapped files)
+options         DEVPAGER                # device pager (mapped devices)
+options         DIAGNOSTIC              # extra kernel debugging checks
+options         DEBUG                   # extra kernel debugging support
+options         "NKMEMCLUSTERS=64"      # 4K pages in kernel malloc pool, default 128 pages
+options         "NMBCLUSTERS=64"        # 4K pages in network mbuf pool, default 256/512 pages
+options         "NBUF=18"               # Number of i/o buffers (4k), min 16
+options         "BUFPAGES=18"           # Number of i/o pages, default 10% of ram, min 16
+options         "CPU_KHZ=200000"        # Oscillator frequency of CPU core
+options         "HZ=100"                # Frequency of clock interrupt
+
+# Filesystem options
+options         FIFO            # POSIX fifo support (in all filesystems)
+options         FFS             # fast filesystem with user and group quotas
+options         UNION           # Union filesystem
+options         KERNFS          # kernel data-structure filesystem
+options         FDESC           # user file descriptor filesystem
+options         PROCFS          # /proc filesystem
+
+# Networking options
+options         INET            # Internet protocols
+
+config          vmunix  root on sd0a
+                        swap on sd0b
+
+device          uart4   pins RB6, RB7   # pins rx, tx
+
+# Console options
+options         "CONS_MAJOR=17"         # UART device
+options         "CONS_MINOR=3"          # UART4
+
+controller      spi2    pins RG7, RG8   # pins sdi, sdo - SD card
+controller      spi1    pins RF1, RF0   # pins sdi, sdo - SPI (J6)
+
+disk            sd0     at spi2 pin RG9 # select pin
+signal          "SD_LED"        pin RE7 # use LED as SD activity
+
+# General purpose I/O ports
+device          gpio1   flags 0x0006    # port B
+                                        # RB1  - ICSP PGEC1
+                                        # RB2  - ICSP PGED1
+
+device          gpio4   flags 0x0080    # port E
+                                        # RE7  - LED output)
+
+# Ethernet controller
+#controller      en0
+#options         "ETHERNET_PHY_ADDR=0"   # PHY address is 0 on EMZ64 board
+
+pseudo-device   pty             4       # pseudo ptys
+pseudo-device   loop                    # network loopback interface
+pseudo-device   ether                   # generic Ethernet protocol
+pseudo-device   vn                      # block/character interface to a vnode

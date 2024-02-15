@@ -1,7 +1,7 @@
 #
 # Build kernels for all listed boards:
 #
-BOARD_LIST      = WIFIRE.pic32\
+_BOARD_LIST      = WIFIRE.pic32\
                   SDZL.pic32\
                   MEBII.pic32\
                   HMZ144.pic32\
@@ -9,11 +9,16 @@ BOARD_LIST      = WIFIRE.pic32\
                   Whitecat.pic32\
                   SNADPIC.pic32
 
+BOARD_LIST	= PROTO.pic32
+
 all:            ../../usr.sbin/config/config
 		for b in $(BOARD_LIST); do $(MAKE) kernel BOARD=$$b; done
 
 clean:
 		for b in $(BOARD_LIST); do $(MAKE) -C$$b clean; done
+
+cleandir:
+		for b in $(BOARD_LIST); do rm -rf $$b; done
 
 ../../usr.sbin/config/config:
 		$(MAKE) -C../../usr.sbin/config

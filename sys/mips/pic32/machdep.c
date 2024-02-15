@@ -134,6 +134,32 @@ PIC32_DEVCFG (
     DEVCFG3_USERID(0xffff));    /* User-defined ID */
 #endif
 
+#if defined(PROTO)
+/*
+ * Chip configuration.
+ */
+PIC32_DEVCFG (
+    DEVCFG0_JTAG_DISABLE |      /* Disable JTAG port */
+    DEVCFG0_TRC_DISABLE,        /* Disable trace port */
+
+    /* Using primary oscillator with external crystal 24 MHz.
+     * PLL multiplies it to 200 MHz. */
+    DEVCFG1_FNOSC_SPLL |        /* System clock supplied by SPLL */
+    DEVCFG1_POSCMOD_EXT |       /* External generator */
+    DEVCFG1_FCKS_ENABLE |       /* Enable clock switching */
+    DEVCFG1_FCKM_ENABLE |       /* Enable fail-safe clock monitoring */
+    DEVCFG1_IESO |              /* Internal-external switch over enable */
+    DEVCFG1_CLKO_DISABLE,       /* CLKO output disable */
+
+    DEVCFG2_FPLLIDIV_3 |        /* PLL input divider = 3 */
+    DEVCFG2_FPLLRNG_5_10 |      /* PLL input range is 5-10 MHz */
+    DEVCFG2_FPLLMULT(50) |      /* PLL multiplier = 50x */
+    DEVCFG2_FPLLODIV_2,         /* PLL postscaler = 1/2 */
+
+//    DEVCFG3_FETHIO |            /* Default Ethernet pins */
+    DEVCFG3_USERID(0xffff));    /* User-defined ID */
+#endif
+
 #if defined(HMZ144)
 PIC32_DEVCFG (
     DEVCFG0_JTAG_DISABLE |      /* Disable JTAG port */
@@ -157,7 +183,7 @@ PIC32_DEVCFG (
     DEVCFG3_USERID(0xffff));    /* User-defined ID */
 #endif
 
-#if defined(MEBII) || defined(HMZ144) || defined(SNADPIC) || defined(EMZ64)
+#if defined(MEBII) || defined(HMZ144) || defined(SNADPIC) || defined(EMZ64) || defined(PROTO)
 /*
  * Boot code at bfc00000.
  * Jump to Flash memory.
@@ -228,8 +254,8 @@ mach_init()
 #if defined(MEBII)
     /* Microchip MEB-II board: use UART1 for console.
      * Map signals rx=RA14, tx=RA15 to pins 4,6 at PICtail connector. */
-    U1RXR = 13;             /* Group 1: 1101 = RA14 */
-    RPA15R = 1;             /* Group 2: 0001 = U1TX */
+    U1RXR = 13;             /* map 1: 1101 = RA14 */
+    RPA15R = 1;             /* map 2: 0001 = U1TX */
 #endif
 
 #if defined(HMZ144) || defined(SNADPIC)
@@ -237,19 +263,28 @@ mach_init()
      * Map signals rx=RE9, tx=RE8. */
     ANSELECLR = (1 << 8) |
                 (1 << 9);   /* Set digital mode for RE8 and RE9 */
-    U2RXR = 13;             /* Group 3: 1101 = RE9 */
-    RPE8R = 2;              /* Group 4: 0010 = U2TX */
+    U2RXR = 13;             /* map 3: 1101 = RE9 */
+    RPE8R = 2;              /* map 4: 0010 = U2TX */
 #endif
 
 #if defined(EMZ64)
     /* Olimex EMZ64 board: use UART4 for console.
      * Map signals rx=RD0, tx=RD4. */
-    U4RXR = 3;              /* Group 4: 0011 = RD0 */
-    RPD4R = 2;              /* Group 3: 0010 = U4TX */
+    U4RXR = 3;              /* map 4: 0011 = RD0 */
+    RPD4R = 2;              /* map 3: 0010 = U4TX */
 
     /* Enable the Ethernet PHY chip. */
     LATBSET = 1 << 11;      /* set RB11 high for EPHY-RST# */
     TRISBCLR = 1 << 11;     /* set RB11 as output */
+#endif
+
+#if defined(PROTO)
+    /* PIC32MZ PROTO board: use UART4 for console.
+     * Map signals rx=RB6, tx=RB7. */
+    ANSELBCLR = (1 << 6) |
+                (1 << 7);   /* set digital mode for RB6 and RB7 */
+    U4RXR = 5;              /* map 4: 0101 = RB6 */
+    RPB7R = 2;              /* map 3: 0010 = U4TX */
 #endif
 
     /*
