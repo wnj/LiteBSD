@@ -57,6 +57,9 @@ controller      spi1    pins RF1, RF0   # pins sdi, sdo - SPI (J6)
 disk            sd0     at spi2 pin RG9 # select pin
 signal          "SD_LED"        pin RE7 # use LED as SD activity
 
+# Buttons
+signal          "BUTTON1"   pin RB5 invert  # PROG, active low
+
 # General purpose I/O ports
 device          gpio1   flags 0x0006    # port B
                                         # RB1  - ICSP PGEC1
